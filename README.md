@@ -1,6 +1,6 @@
-# Pure JS Button in Lightning
+# Pure JS Buttons in Lightning
 
-JS buttons are back in Lightning! For now, at least. And they are even more powerful than JS buttons in classic, in some respects. SOQL and DML statements supported!
+JS buttons are back in Lightning! (For now, at least) And they are even more powerful than JS buttons in classic, in some respects. SOQL and DML statements supported!
 
 ### The Setup
 
