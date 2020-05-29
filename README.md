@@ -6,7 +6,7 @@ JS buttons are back in Lightning! For now, at least. And they are even more powe
 
 The button can be made available to users via a quick action powered by the `jsButtonQuickAction` component. The actual JavaScript should be entered into a `JS_Button__mdt` custom metadata record, into the `Script__c` field with the same name as the name of the SObject. The repo contains a couple of samples for Account and Contact. The corollary is that, out of the box, only one button per SObjecttype may be supported. 
 
-### The syntax
+### The Syntax
 
 This is the fun part. The syntax is quite permissive, with some restrictions, which I will cover below. I haven't, obviously, explored all possible scenarios and the information may still be incomplete. Please raise an issue if you come across something I haven't covered.
 
@@ -40,7 +40,7 @@ alert(acct[0].NumberOfEmployees);
 $A.get('e.force:refreshView').fire();
 ```
 
-### About the syntax
+### About the Syntax
 
 * Note how the syntax is linear for SOQL and DML. Coupled with JavaScript's support for manipulating arrays, this makes it easier to manipulate data, even compared to Apex in several instances.
 * SOQL and DML statements must be enclosed in `||`. Semi-colon can be inside or outside the `||`
@@ -50,12 +50,13 @@ $A.get('e.force:refreshView').fire();
 
 ### Known Limitations
 
+* Support for delete has been intentionally withheld.
 * Single-line comments are not supported. 
 * Haven't tested DML with date, datetime, boolean, geolocation and other compound fields. I will update this section as I do so.
 * Explicit use of async/await, Promises and Generators is not supported, atm.
 * DML on Files, Attachments, Documents, etc. is not supported
 
-### Developers: Extending to more than one button per SObject Type
+### For Developers: Extending to more than one Button per SObjectType
 
-If you need more, you may create lightning component quickActions with the name of the custom metadata record containing your JS passed in to the `jsButton` child component. You will also need to implement an `init` method to invoke the controller method in `jsButton`. Refer to the `jsButtonQuickAction` component for more details
+If you need more than one button on an SObjectType, you may create a lightning component quickAction with the name of the custom metadata record containing your JS passed in to the `jsButton` child component. You will also need to implement an `init` method to invoke the controller method in `jsButton`. Refer to the `jsButtonQuickAction` component for implementation details
 
