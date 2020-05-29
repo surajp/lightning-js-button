@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Contact</label>
+    <protected>false</protected>
+    <values>
+        <field>Script__c</field>
+        <value xsi:type="xsd:string">let con = || select LastName from Contact where Id=&apos;${recordId}&apos; ||;
+
+let files = Array(5).fill(0).map((e,i)=&gt;({ VersionData: btoa(con[0].LastName+&apos;-&apos;+i)), PathOnClient: &apos;file.txt&apos;, Title: con[0].LastName+&apos;-File-&apos;+i }));
+
+let fileIds = || insert ContentVersion(files) ||;
+
+let docIds = || select ContentDocumentId from ContentVersion where Id in (&apos;${fileIds.join(&quot;&apos;,&apos;&quot;)}&apos;) ||;
+
+let linkedEntities = docIds.map((e,i)=&gt;({LinkedEnityId: acct[0].Id, ContentDocumentId: e.Id});
+
+|| insert linkedEntities ||;
+
+alert(&apos;done&apos;);</value>
+    </values>
+</CustomMetadata>

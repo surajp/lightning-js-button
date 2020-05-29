@@ -1,0 +1,12 @@
+<aura:component controller="DynamicSOQLDMLController">
+  <aura:attribute name="js" type="string" default="" access="public" description="The JS to be executed" />
+
+  <aura:attribute
+    name="cmdtName"
+    type="string"
+    access="public"
+    description="The name of the custom metadata holding the JS"
+  />
+  <aura:attribute name="recordId" type="string" access="public" description="Record Id" />
+  <aura:method name="invoke" action="{!c.invoke}"></aura:method>
+</aura:component>

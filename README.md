@@ -1,0 +1,48 @@
+# Pure JS button in Lightning
+
+JS buttons are back in Lightning! For now, at least. And they are even more powerful than JS buttons in classic, in some respects. SOQL and DML statements supported!
+
+### The Setup
+
+The button can be made available to users via a quick action powered by the `jsButtonQuickAction` component. The actual JavaScript should be entered into a `JS_Button__mdt` custom metadata record, into the `Script__c` field with the same name as the name of the SObject. The repo contains a couple of samples for Account and Contact. The corollary is that, out of the box, only one button per SObjecttype may be supported. 
+
+### The syntax
+
+This is the fun part. The syntax is quite permissive, with some restrictions, which I will cover below. I haven't, obviously, explored all possible scenarios and the information may still be incomplete. Please raise a PR if you come across something I haven't covered.
+
+* Simple examples (no soql/dml)
+
+```javascript 
+alert('hello,world');
+```
+
+```javascript
+alert(Array(5).fill(0).map((e,i)=>'Hello, '+i));
+```
+
+* Fetch 10 of the 100 latest Accounts without a Contact and add a Contact to each of them
+
+```javascript 
+let accts=|| Select Name,(Select Id from Contacts) from Account order by createddate desc limit 100 ||;
+let contacts = accts.filter((a)=>!a.Contacts || a.Contacts.length===0).slice(0,10).map((a)=>({LastName: a.Name+'-Contact', AccountId: a.Id}));
+let contactIds = || insert Contact(contacts) ||; //Note how the SObjectType has been specified. This is required for insert and upsert
+$A.get('e.force:refreshView').fire(); // $A is supported!
+```
+
+* Act in the context of the current record
+
+```javascript
+let acct = || Select NumberOfEmployees from Account where Id='${recordId}' ||;
+acct[0].NumberOfEmployees = (acct[0].NumberOfEmployees || 0) + 10;
+let acctId = || update acct ||;
+acct = || Select NumberOfEmployees from Account where Id='${acctId}' ||;
+alert(acct[0].NumberOfEmployees);
+$A.get('e.force:refreshView').fire();
+```
+
+
+
+### Developers: Extending to more than one button per SObject Type
+
+If you need more, you may create lightning component quickActions with the name of the custom metadata record containing your JS passed in to the `jsButton` child component. You will also need to implement an `init` method to invoke the controller method in `jsButton`. Refer to the `jsButtonQuickAction` component for more details
+

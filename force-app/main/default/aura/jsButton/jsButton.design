@@ -1,0 +1,5 @@
+<design:component >
+  <design:attribute name="js" label="Javascript"/>
+  <design:attribute name="recordId" label="The record Id"/>
+  <design:attribute name="cmdtName" label="Name of the custom metadata holding the js"/>
+</design:component>

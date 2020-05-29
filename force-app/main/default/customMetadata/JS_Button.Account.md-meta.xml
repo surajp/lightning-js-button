@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Account</label>
+    <protected>false</protected>
+    <values>
+        <field>Script__c</field>
+        <value xsi:type="xsd:string">let acct = || Select NumberOfEmployees from Account where Id=&apos;${recordId}&apos; ||; 
+
+
+acct[0].NumberOfEmployees = (acct[0].NumberOfEmployees || 0) + 10;
+
+let acctId = || update acct ||; 
+
+acct = || Select NumberOfEmployees from Account where Id=&apos;${acctId}&apos; ||;
+
+alert(acct[0].NumberOfEmployees);
+
+$A.get(&apos;e.force:refreshView&apos;).fire();</value>
+    </values>
+</CustomMetadata>

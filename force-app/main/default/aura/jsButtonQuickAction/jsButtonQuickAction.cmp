@@ -1,0 +1,4 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:hasSObjectName">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <c:jsButton aura:id="jsbutton" recordId="{!v.recordId}" cmdtName="{!v.sObjectName}"></c:jsButton>
+</aura:component>
