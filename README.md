@@ -4,7 +4,7 @@ JS buttons are back in Lightning! (For now, at least) And they are even more pow
 
 ### The Setup
 
-The button can be made available to users via a quick action powered by the `jsButtonQuickAction` component. The actual JavaScript should be entered into a `JS_Button__mdt` custom metadata record, into the `Script__c` field with the same name as the name of the SObject. The repo contains a couple of samples for Account and Contact. The corollary is that, out of the box, only one button per SObjecttype may be supported. 
+The button can be made available to users via a quick action powered by the `jsButtonQuickAction` component. The actual JavaScript should be entered into a `JS_Button__mdt` custom metadata record, into the `Script__c` field with the same name as the name of the SObject. The repo contains a couple of samples for Account and Contact. The corollary is that, out of the box, only one button per SObjectType may be supported. Note that the Contact js button intentionally throws an error (by attempting to create a File) to showcase error handling capabilities.
 
 ### The Syntax
 
