@@ -1,16 +1,16 @@
 ({
-  doInit: function (component, event, helper) {
+  doInit: function (component) {
     component
       .find("jsbutton")
       .invoke()
       .then(
-        $A.getCallback(() => {
+        $A.getCallback((resp) => {
+          console.log('>> resp '+JSON.stringify(resp));
           $A.get("e.force:closeQuickAction").fire();
         })
       )
       .catch(
         $A.getCallback((err) => {
-          alert("An error occurred " + err);
           $A.get("e.force:closeQuickAction").fire();
         })
       );
