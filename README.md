@@ -24,7 +24,9 @@ alert(Array(5).fill(0).map((e,i)=>'Hello, '+i));
 
 ```javascript 
 let accts=|| Select Name,(Select Id from Contacts) from Account order by createddate desc limit 100 ||;
-let contacts = accts.filter((a)=>!a.Contacts || a.Contacts.length===0).slice(0,10).map((a)=>({LastName: a.Name+'-Contact', AccountId: a.Id}));
+let contacts = accts.filter((a)=>!a.Contacts || a.Contacts.length===0)
+                    .slice(0,10)
+                    .map((a)=>({LastName: a.Name+'-Contact', AccountId: a.Id}));
 let contactIds = || insert Contact(contacts) ||; /*Note how the SObjectType has been specified. This is required for insert and upsert*/
 $A.get('e.force:refreshView').fire(); /* $A is supported!*/
 ```
@@ -47,13 +49,14 @@ $A.get('e.force:refreshView').fire();
 * Upsert and Update statements must be qualified with the SObjectType thus `|| insert Account(accts) ||;`
 * SOQL statements are parsed using template literals. Any arguments should follow the appropriate syntax `${argument}`
 * SOQL and DML statements may not be wrapped in a function.
+* All statements must be strictly terminated by a semicolon.
 
 ### Known Limitations
 
 * Support for delete has been intentionally withheld.
 * Single-line comments are not supported. 
 * Haven't tested DML with date, datetime, boolean, geolocation and other compound fields. I will update this section as I do so.
-* Explicit use of async/await, Promises and Generators is not supported, atm.
+* SOQL and DML statements should be enclosed in async functions, if they are required to be contained in functions. The program automatically adds `await` to SOQL and DML statements
 * DML on Files, Attachments, Documents, etc. is not supported
 
 ### For Developers: Extending to more than one Button per SObjectType
