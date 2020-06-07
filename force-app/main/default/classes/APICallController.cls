@@ -12,7 +12,6 @@ public with sharing class APICallController {
   ) {
     HttpRequest req = new HttpRequest();
     req.setEndpoint(endPoint);
-    system.debug('endpoint ' + endpoint);
     req.setMethod(method);
     if (method != 'GET') {
       req.setBody(bodyStr);
@@ -23,7 +22,6 @@ public with sharing class APICallController {
       }
     }
     HttpResponse resp = new Http().send(req);
-    system.debug('response ' + resp.getBody());
     Map<String, String> respHeaders = new Map<String, String>();
     for (String key : resp.getHeaderKeys()) {
       respHeaders.put(key, String.valueOf(resp.getHeader(key)));
