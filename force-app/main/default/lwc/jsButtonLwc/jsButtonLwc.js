@@ -4,6 +4,7 @@ import executeSoql from "@salesforce/apex/DynamicSOQLDMLController.executeSoqlQu
 import executeDml from "@salesforce/apex/DynamicSOQLDMLController.executeDml";
 import getSObjectType from "@salesforce/apex/DynamicSOQLDMLController.getSObjectTypeFromId";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import HttpRequest from "c/httpRequest";
 
 const REGEX_SOQL = "\\|\\|\\s?(select\\s+[^|]+)\\s?\\|\\|";
 const REGEX_UPDATE = "\\|\\|\\s?update\\s([^|;]+);?\\s*\\|\\|";
@@ -16,6 +17,8 @@ export default class JsButtonLwc extends LightningElement {
   @api recordId;
   _notifiedParent = false;
 
+  httpRequest = new HttpRequest();
+
   renderedCallback() {
     if (!this._notifiedParent)
       this.dispatchEvent(new CustomEvent("initcomplete"));
@@ -26,8 +29,8 @@ export default class JsButtonLwc extends LightningElement {
     if (!this.js && this.cmdtName) {
       let js = await fetchJSFromCmdt({ cmdtName: this.cmdtName });
       await this.runJS(js);
-    }else if(this.js){
-      await this.runJS(this.js)
+    } else if (this.js) {
+      await this.runJS(this.js);
     }
   }
 
@@ -47,7 +50,7 @@ export default class JsButtonLwc extends LightningElement {
 
   async executeDml(dmlType, records, sObjectType) {
     try {
-      if(records && !Array.isArray(records)){
+      if (records && !Array.isArray(records)) {
         records = [records];
       }
       if (!sObjectType)
@@ -93,7 +96,9 @@ export default class JsButtonLwc extends LightningElement {
       new RegExp(REGEX_INSERT_UPSERT, "gi"),
       "await this.executeDml('$1',$3,'$2');"
     );
-    let op = await (Function("recordId", `return (async ()=>{${js}})()`).bind(this))(this.recordId);
+    let op = await Function("recordId", `return (async ()=>{${js}})()`).bind(
+      this
+    )(this.recordId);
     return op;
   }
 }

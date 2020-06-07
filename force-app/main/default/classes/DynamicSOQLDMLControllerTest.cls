@@ -6,7 +6,7 @@ public with sharing class DynamicSOQLDMLControllerTest {
     insert a;
     a.Phone = '432424';
     Account[] recordsToUpdate = new List<Account>{ a };
-    DynamicSOQLDMLController.executeDml('update', recordsToUpdate, null, null);
+    DynamicSOQLDMLController.executeDml('update', JSON.serialize(recordsToUpdate), 'Account');
     a = [SELECT Phone FROM Account WHERE Id = :a.Id];
     System.assertEquals('432424', a.Phone);
   }
@@ -16,11 +16,8 @@ public with sharing class DynamicSOQLDMLControllerTest {
     // we won't test fetching cmdt
     DynamicSOQLDMLController.getJSFromCmdt('Account');
     String acctString = '[{"attributes":{"type":"Account"},"Name":"Test Account"}]';
-    DynamicSOQLDMLController.executeDml('insert', null, acctString, 'Account');
-    System.assertEquals(
-      1,
-      [SELECT ID FROM Account WHERE Name = 'Test Account'].size()
-    );
+    DynamicSOQLDMLController.executeDml('insert', acctString, 'Account');
+    System.assertEquals(1, [SELECT ID FROM Account WHERE Name = 'Test Account'].size());
   }
 
   @isTest
@@ -34,7 +31,7 @@ public with sharing class DynamicSOQLDMLControllerTest {
     accountsToUpdate.add(a1);
 
     String acctString = JSON.serialize(accountsToUpdate);
-    DynamicSOQLDMLController.executeDml('upsert', null, acctString, 'Account');
+    DynamicSOQLDMLController.executeDml('upsert', acctString, 'Account');
     System.assertEquals(2, [SELECT ID FROM Account].size());
     a = [SELECT Phone FROM Account WHERE Id = :a.Id];
     System.assertEquals('432343', a.Phone);
@@ -44,9 +41,7 @@ public with sharing class DynamicSOQLDMLControllerTest {
   public static void testSoql() {
     Account a = new Account(Name = 'Test Account');
     insert a;
-    Account[] acctsResult = DynamicSOQLDMLController.executeSoqlQuery(
-      'Select Name from Account'
-    );
+    Account[] acctsResult = DynamicSOQLDMLController.executeSoqlQuery('Select Name from Account');
     System.assertEquals(1, acctsResult.size());
     System.assertEquals('Test Account', acctsResult[0].Name);
   }
