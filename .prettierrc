@@ -8,6 +8,10 @@
     {
       "files": "*.{cmp,page,component}",
       "options": { "parser": "html","printWidth":120 }
+    },
+    {
+      "files": "*.{cls,trigger,apex}",
+      "options": { "parser": "apex","printWidth":120 }
     }
   ]
 }

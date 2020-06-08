@@ -1,6 +1,6 @@
 # Pure JS Buttons in Lightning
 
-JS buttons are back in Lightning! (For now, at least) And they are even more powerful than JS buttons in classic, in some respects. SOQL and DML statements supported!
+JS buttons are back in Lightning! (For now, at least) And they are even more powerful than JS buttons in classic. Run SOQL and DML statements seamlessly. Make callouts to APIs, including Salesforce APIs using named credentials directly from JavaScript! This would allow you to build buttons that do amazing things, just using JavaScript. Check out the `scripts` folder for examples. Feel free to raise a PR to contribute your own scripts.
 
 ### The Setup
 
@@ -24,7 +24,9 @@ alert(Array(5).fill(0).map((e,i)=>'Hello, '+i));
 
 ```javascript 
 let accts=|| Select Name,(Select Id from Contacts) from Account order by createddate desc limit 100 ||;
-let contacts = accts.filter((a)=>!a.Contacts || a.Contacts.length===0).slice(0,10).map((a)=>({LastName: a.Name+'-Contact', AccountId: a.Id}));
+let contacts = accts.filter((a)=>!a.Contacts || a.Contacts.length===0)
+                    .slice(0,10)
+                    .map((a)=>({LastName: a.Name+'-Contact', AccountId: a.Id}));
 let contactIds = || insert Contact(contacts) ||; /*Note how the SObjectType has been specified. This is required for insert and upsert*/
 $A.get('e.force:refreshView').fire(); /* $A is supported!*/
 ```
@@ -47,16 +49,16 @@ $A.get('e.force:refreshView').fire();
 * Upsert and Update statements must be qualified with the SObjectType thus `|| insert Account(accts) ||;`
 * SOQL statements are parsed using template literals. Any arguments should follow the appropriate syntax `${argument}`
 * SOQL and DML statements may not be wrapped in a function.
+* All statements must be strictly terminated by a semicolon.
 
 ### Known Limitations
 
 * Support for delete has been intentionally withheld.
 * Single-line comments are not supported. 
 * Haven't tested DML with date, datetime, boolean, geolocation and other compound fields. I will update this section as I do so.
-* Explicit use of async/await, Promises and Generators is not supported, atm.
+* SOQL and DML statements should be enclosed in async functions, if they are required to be contained in functions. The program automatically adds `await` to SOQL and DML statements
 * DML on Files, Attachments, Documents, etc. is not supported
 
-### For Developers: Extending to more than one Button per SObjectType
+### Using Salesforce (and other) APIs in your script
 
-If you need more than one button on an SObjectType, you may create a lightning component quickAction with the name of the custom metadata record containing your JS passed in to the `jsButton` child component. You will also need to implement an `init` method to invoke the controller method in `jsButton`. Refer to the `jsButtonQuickAction` component for implementation details
-
+You can use any of Salesforce's APIs (REST, Tooling, Metadata) by setting up a named credential for your own Salesforce instance. This allows you to write scripts for admins to perform tasks like [deleting inactive versions of flows](scripts/jsButton/deleteInactiveFlowVersions.js), or [creating new JS Buttons](scripts/jsButton/createNewJSButton.js)! You can also use named credentials to interact with other APIs as well, of course. Although, for Public APIs, you can just use `fetch` directly. The Salesforce named credential set up would need to have the following scopes (api refresh_token offline_access web). You would need to set up your own Connected App and a Salesforce Auth. Provider that uses this connected app.
