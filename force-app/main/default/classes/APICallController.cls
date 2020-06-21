@@ -1,8 +1,17 @@
 /**
- ** description: Controller for making api calls and sending the response back
+ * description: Controller for making api calls and sending the response back
  **/
 
 public with sharing class APICallController {
+  /**
+   * description Given an endpoint, request params and headers, callout the api and return the response
+   * @param endpoint The endpoint to callout to
+   * @param method The http method to use
+   * @param bodyStr The request body string.
+   * @param headers Map of string key and value for request headers
+   * @return HttpResponseWrapper
+   *
+   */
   @AuraEnabled
   public static HttpResponseWrapper makeApiCall(
     String endPoint,

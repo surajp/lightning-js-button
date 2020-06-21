@@ -6,10 +6,10 @@ import getSObjectType from "@salesforce/apex/DynamicSOQLDMLController.getSObject
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import HttpRequest from "c/httpRequest";
 
-const REGEX_SOQL = "\\|\\|\\s?(select\\s+[^|]+)\\s?\\|\\|";
-const REGEX_UPDATE = "\\|\\|\\s?update\\s([^|;]+);?\\s*\\|\\|";
+const REGEX_SOQL = "\\|\\|\\s+(select\\s+[^|]+)\\s+\\|\\|";
+const REGEX_UPDATE = "\\|\\|\\s+update\\s+([\\w\\d_]+).*\\|\\|";
 const REGEX_INSERT_UPSERT =
-  "\\|\\|\\s?(insert|upsert)\\s([\\w\\d_]+)\\s?\\(\\s?(\\w+).*\\|\\|";
+  "\\|\\|\\s*(insert|upsert)\\s+([\\w\\d_]+)\\s*\\(\\s*(\\w+).*\\|\\|";
 
 export default class JsButtonLwc extends LightningElement {
   @api js;
@@ -77,7 +77,8 @@ export default class JsButtonLwc extends LightningElement {
 
   async runJS(js) {
     //replace consecutive spaces
-    js = js.replace(/\s+/g, " ");
+    //don't replace consecutive spaces
+    //js = js.replace(/\s+/g, " ");
 
     //parse soql
     js = js.replace(
@@ -96,6 +97,7 @@ export default class JsButtonLwc extends LightningElement {
       new RegExp(REGEX_INSERT_UPSERT, "gi"),
       "await this.executeDml('$1',$3,'$2');"
     );
+    //eslint-disable-next-line
     let op = await Function("recordId", `return (async ()=>{${js}})()`).bind(
       this
     )(this.recordId);
