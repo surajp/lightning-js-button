@@ -6,7 +6,6 @@
         <field>Script__c</field>
         <value xsi:type="xsd:string">let acct = || Select NumberOfEmployees from Account where Id=&apos;${recordId}&apos; ||; 
 
-
 acct[0].NumberOfEmployees = (acct[0].NumberOfEmployees || 0) + 10;
 
 let acctId = || update acct ||; 
