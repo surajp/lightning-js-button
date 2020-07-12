@@ -97,10 +97,16 @@ export default class JsButtonLwc extends LightningElement {
       new RegExp(REGEX_INSERT_UPSERT, "gi"),
       "await this.executeDml('$1',$3,'$2');"
     );
-    //eslint-disable-next-line
-    let op = await Function("recordId", `return (async ()=>{${js}})()`).bind(
-      this
-    )(this.recordId);
-    return op;
+
+    try {
+      //eslint-disable-next-line
+      let op = await Function("recordId", `return (async ()=>{${js}})()`).bind(
+        this
+      )(this.recordId);
+      return op;
+    } catch (err) {
+      console.error("An error occurred " + err.message);
+      alert("Unhandled error in script " + err.message);
+    }
   }
 }
