@@ -1,15 +1,18 @@
-/**
- * description: Controller for making api calls and sending the response back
- **/
+/************************************************************
 
+*** @author Suraj Pillai
+*** @group Controller
+*** @description Controller for making API calls and sending the response back
+*** 
+**/
 public with sharing class APICallController {
   /**
-   * description Given an endpoint, request params and headers, callout the api and return the response
-   * @param endpoint The endpoint to callout to
+   * @description Given an endpoint, request params and headers, callout the api and return the response
+   * @param endPoint The endpoint to callout to
    * @param method The http method to use
    * @param bodyStr The request body string.
    * @param headers Map of string key and value for request headers
-   * @return HttpResponseWrapper
+   * @return The response for the http request
    *
    */
   @AuraEnabled

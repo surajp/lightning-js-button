@@ -2,87 +2,49 @@ try {
   let cmpName = prompt(
     "Enter the name for your aura bundle. This will be the name of the custom metadata record backing this bundle as well"
   );
-
   if (!cmpName) return;
-
-  this.httpRequest.setEndpoint(
-    "callout:salesforce/services/data/v48.0/tooling/sobjects/AuraDefinitionBundle/"
-  );
-
-  this.httpRequest.setMethod("POST");
-
-  this.httpRequest.addHeader("Content-Type", "application/json");
-
-  this.httpRequest.setBody({
+  let body = {
     MasterLabel: cmpName,
     Description: "created by js button",
     ApiVersion: 48.0,
     DeveloperName: cmpName
-  });
-
-  let resp = await this.httpRequest.send();
-
-  let auraBundleId = JSON.parse(resp.body).id;
-
-  alert(auraBundleId);
-
-  this.httpRequest.clear();
-
-  this.httpRequest.setEndpoint(
-    "callout:salesforce/services/data/v48.0/tooling/sobjects/AuraDefinition/"
+  };
+  let resp = await callout(
+    "callout:salesforce/services/data/v48.0/tooling/sobjects/AuraDefinitionBundle/",
+    "POST",
+    { "Content-Type": "application/json" },
+    body
   );
-
-  this.httpRequest.setMethod("POST");
-  this.httpRequest.addHeader("Content-Type", "application/json");
-
-  let source = ` <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:hasSObjectName">
-  <c:jsButtonLwc
-  aura:id="jsbutton"
-  recordId="{!v.recordId}"
-  cmdtName="${cmpName}"
-  oninitcomplete="{!c.doInit}"
-  ></c:jsButtonLwc>
-  </aura:component>`;
-
-  this.httpRequest.setBody({
+  let auraBundleId = JSON.parse(resp.body).id;
+  alert(auraBundleId);
+  let source = ` <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:hasSObjectName"> <c:jsButtonLwc aura:id="jsbutton" recordId="{!v.recordId}" cmdtName="${cmpName}" oninitcomplete="{!c.doInit}" ></c:jsButtonLwc> </aura:component>`;
+  body = {
     AuraDefinitionBundleId: auraBundleId,
     DefType: "COMPONENT",
     Format: "XML",
     Source: source
-  });
-
-  resp = await this.httpRequest.send();
-
-  alert(resp.statusCode);
-
-  source = ` ({
-  doInit: function (component) {
-  component
-  .find("jsbutton")
-  .invoke()
-  .then(
-  $A.getCallback((resp) => {
-  $A.get("e.force:closeQuickAction").fire();
-  })
-  )
-  .catch(
-  $A.getCallback((err) => {
-  $A.get("e.force:closeQuickAction").fire();
-  })
+  };
+  resp = await callout(
+    "callout:salesforce/services/data/v48.0/tooling/sobjects/AuraDefinition/",
+    "POST",
+    { "Content-Type": "application/json" },
+    body
   );
-  }
-  });`;
-
-  this.httpRequest.setBody({
+  alert(resp.statusCode);
+  source = ` ({ doInit: function (component) { component .find("jsbutton") .invoke() .then( $A.getCallback((resp) => { $A.get("e.force:closeQuickAction").fire(); })) .catch( $A.getCallback((err) => { $A.get("e.force:closeQuickAction").fire(); })); } });`;
+  body = {
     AuraDefinitionBundleId: auraBundleId,
     DefType: "CONTROLLER",
     Format: "JS",
     Source: source
-  });
-
-  resp = await this.httpRequest.send();
-
-  alert(resp.statusCode);
+  };
+  resp = await callout(
+    "callout:salesforce/services/data/v48.0/tooling/sobjects/AuraDefinition/",
+    "POST",
+    { "Content-Type": "application/json" },
+    body
+  );
+  toast(resp.statusCode, "success");
 } catch (e) {
-  alert(JSON.stringify(e));
+  toast(JSON.stringify(e), "error");
 }

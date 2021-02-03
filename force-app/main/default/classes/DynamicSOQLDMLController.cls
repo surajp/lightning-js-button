@@ -36,27 +36,48 @@ public with sharing class DynamicSOQLDMLController {
     return recordId.getSObjectType().getDescribe().getName();
   }
 
+  private static List<ContentVersion> deserializeContentVersion(String strData) {
+    List<Object> deserializedRecords = (List<Object>) JSON.deserializeUntyped(strData);
+    List<ContentVersion> recordsList = new List<ContentVersion>();
+    for (Object objRec : deserializedRecords) {
+      Map<String, Object> record = (Map<String, Object>) objRec;
+      ContentVersion cv = new ContentVersion();
+      String vData = String.valueOf(record.remove('VersionData'));
+      cv = (ContentVersion) JSON.deserialize(JSON.serialize(record), ContentVersion.class);
+      cv.put('VersionData', EncodingUtil.base64Decode(vData));
+      recordsList.add(cv);
+    }
+    return recordsList;
+  }
+
   /**
-   * Execute a DML statement
+   * @description Execute a DML statement
    * @param operation 'Insert','Update' or 'Upsert'
-   * @param strdata The records to update, stringified
-   * @param sobjectType The SObject type to perform the DML on
-   *
+   * @param strData The records to update, stringified
+   * @param sObjectType The SObject type to perform the DML on
    * @return Id[]
    **/
   @AuraEnabled
   public static Id[] executeDml(String operation, String strData, String sObjectType) {
-    SObject[] records = (SObject[]) JSON.deserialize(strData, Type.forName('List<' + sObjectType + '>'));
+    List<SObject> records = null;
+
+    if (sObjectType.equalsIgnoreCase('ContentVersion')) {
+      records = deserializeContentVersion(strData);
+    } else {
+      records = (SObject[]) JSON.deserialize(strData, Type.forName('List<' + sObjectType + '>'));
+    }
+
     if (operation == 'insert') {
       insert records;
-      return new List<Id>(new Map<Id, SObject>(records).keySet());
     } else if (operation == 'update') {
       update records;
-      return new List<Id>(new Map<Id, SObject>(records).keySet());
     } else if (operation == 'upsert') {
       upsert records;
-      return new List<Id>(new Map<Id, SObject>(records).keySet());
+    } else if (operation == 'delete') {
+      delete records;
+    } else {
+      return null;
     }
-    return null;
+    return new List<Id>(new Map<Id, SObject>(records).keySet());
   }
 }
