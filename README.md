@@ -48,7 +48,7 @@ toast(
 ); /* `toast` service to show message toasts */
 ```
 
-- Fetch 100 of the latest Accounts and for upto 10 of them without a Contact, add a Contact
+- Fetch 100 of the latest Accounts and for upto 10 of the ones without a Contact, add a Contact
 
 ```js
 let accts = await soql(
