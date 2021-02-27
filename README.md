@@ -24,9 +24,10 @@ The library supports the following apis
 
 - soql
 - dml (dml.insert, dml.update, dml.upsert and dml.del ) // `delete` is a resrved keyword :(
-- callout
-- sfapi
-- toast
+- callout ( used for calling external services through Apex. Named credentials are supported! )
+- sfapi ( used for calling Salesforce APIs from the same org. Requires CORS and
+  CSP Trusted Sites setup. Details below)
+- toast ( show a platform toast message )
 
 ### The Syntax
 
