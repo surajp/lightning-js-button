@@ -98,10 +98,10 @@ let cvId = await dml.insert(cv, "ContentVersion");
 - Note how the syntax is linear for SOQL and DML. Coupled with JavaScript's
   support for manipulating arrays, this makes it easier to manipulate data,
   even compared to Apex in several instances.
-- `Insert` and `upsert` statements must be qualified with the SObjectType thus `dml.insert(acct,"Account")`
-- SOQL statements are parsed using template literals. Any arguments should
-  follow the appropriate syntax `${argument}`
-- SOQL and DML statements may not be wrapped in a function.
+- `dml.insert` and `dml.upsert` expect the SObjectType as the second argument.
+  Thus `dml.insert(acct,"Account")`
+- Statements with contextual arguments such as `recordId`
+  are best expressed using [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
 - All statements must be strictly terminated by a semicolon.
 
 ### Known Limitations
@@ -109,9 +109,6 @@ let cvId = await dml.insert(cv, "ContentVersion");
 - Single-line comments are not supported.
 - Haven't tested DML with date, datetime, boolean, geolocation and other
   compound fields. I will update this section as I do so.
-- SOQL and DML statements should be enclosed in async functions, if they are
-  required to be contained in functions. The program automatically adds `await`
-  to SOQL and DML statements
 - To insert `ContentVersion` make sure to set `VersionData` to base64 data.
   Refer to the example [here](./scripts/jsButton/createContactFiles.js) for details.
 
@@ -122,8 +119,5 @@ To use Salesforce APIs from your org, using the `sfapi` method, take the followi
 - Add your lightning domain (ends with `lightning.force.com`) to the `CORS` list under `Setup`.
 - Add your classic domain to `CSP Trusted Sites` list under `Setup`.
 
-<p>
-   This allows you to write
-  scripts for admins to perform tasks like [deleting inactive versions of flows](scripts/jsButton/deleteInactiveFlowVersions.js),
-  To access APIs from other Salesforce orgs, use a named credential and the `callout` api. 
-  For Public APIs, you can use `fetch` directly.
+This allows you to write scripts for admins to perform tasks like [deleting inactive versions of flows](./scripts/jsButton/deleteInactiveFlowVersions.js) .
+To access protected APIs such as those from other Salesforce orgs, use a named credential and the `callout` api. For Public APIs, you can use `fetch` directly.
