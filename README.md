@@ -81,7 +81,7 @@ toast(acct[0].NumberOfEmployees, "success");
 $A.get("e.force:refreshView").fire();
 ```
 
-- Upload files to ContentVersion(ContentDocument) records
+- Add a 'File' to the current record
 
 ```js
 let fileContent = btoa("Hello World");
@@ -89,9 +89,12 @@ let fileContent = btoa("Hello World");
 let cv = {
   VersionData: fileContent,
   Title: "My Awesome File",
-  PathOnClient: "MyFile.txt"
+  PathOnClient: "MyFile.txt",
+  FirstPublishLocationId: recordId
 };
 let cvId = await dml.insert(cv, "ContentVersion");
+toast("New file Added", "success");
+$A.get("e.force:refreshView").fire();
 ```
 
 ### About the Syntax
