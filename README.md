@@ -4,8 +4,8 @@ JS buttons are back in Lightning! (For now, at least) And they are even more
 powerful than JS buttons in classic. Run SOQL and DML statements seamlessly.
 Make callouts to APIs, including Salesforce APIs directly from JavaScript!
 This would allow you to build buttons that do amazing things, just using
-JavaScript. Check out the `scripts` folder for examples. Feel free to raise a
-PR to contribute your own scripts.
+JavaScript. Check out the [scripts](./scripts/jsButton) folder for examples.
+Feel free to raise a PR to contribute your own scripts.
 
 ### The Setup
 
@@ -120,5 +120,6 @@ To use Salesforce APIs from your org, using the `sfapi` method, take the followi
 - Add your lightning domain (ends with `lightning.force.com`) to the `CORS` list under `Setup`.
 - Add your classic domain to `CSP Trusted Sites` list under `Setup`.
 
-This allows you to write scripts for admins to perform tasks like [deleting inactive versions of flows](./scripts/jsButton/deleteInactiveFlowVersions.js) .
+This allows you to write scripts for admins to perform tasks like [deleting inactive versions of flows](./scripts/jsButton/deleteInactiveFlowVersions.js) or [use composite api](./scripts/jsButton/compositeApiExample.js)
+for creating parent and child records.
 To access protected APIs such as those from other Salesforce orgs, use a named credential and the `callout` api. For Public APIs, you can use `fetch` directly.
