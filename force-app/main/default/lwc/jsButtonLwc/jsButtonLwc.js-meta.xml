@@ -6,9 +6,10 @@
     <targets>
       <target>lightning__RecordPage</target>
       <target>lightning__AppPage</target>
+      <target>lightning__HomePage</target>
     </targets>
     <targetConfigs>
-      <targetConfig targets="lightning__AppPage,lightning__RecordPage">
+      <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
         <property name="cmdtName" type="string" label="Custom Metadata Name"/>
         <property name="js" type="string" label="Script"/>
         <property name="buttonLabel" type="string" label="Button Label"/>

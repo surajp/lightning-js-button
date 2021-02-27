@@ -1,6 +1,6 @@
 try {
   let resp = await callout(
-    "callout:salesforce/services/data/v48.0/tooling/query/?q=Select+Id,FullName+from+Flow+where+status+!=+'Active'"
+    "callout:salesforce/services/data/v50.0/tooling/query/?q=Select+Id,FullName+from+Flow+where+status+!=+'Active'"
   );
   let respJson = JSON.parse(resp.body);
 
@@ -8,7 +8,7 @@ try {
     respJson.records.map(async (rec) => {
       let flowId = rec.Id;
       resp = await callout(
-        "callout:salesforce/services/data/v48.0/tooling/sobjects/Flow/" +
+        "callout:salesforce/services/data/v50.0/tooling/sobjects/Flow/" +
           flowId +
           "/",
         "DELETE"

@@ -1,3 +1,4 @@
+/* Creates 5 files related to the current Contact record */
 let con = await soql(`select LastName from Contact where Id='${recordId}'`);
 let files = Array(5)
   .fill(0)
