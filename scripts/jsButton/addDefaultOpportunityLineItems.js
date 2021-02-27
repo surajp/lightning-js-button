@@ -14,7 +14,7 @@ try {
     ListPrice: item.UnitPrice,
     TotalPrice: item.UnitPrice
   }));
-  await dml("insert", oli, "OpportunityLineItem");
+  await dml.insert(oli, "OpportunityLineItem");
   $A.get("e.force:refreshView").fire();
 } catch (e) {
   toast(JSON.stringify(e), "error");

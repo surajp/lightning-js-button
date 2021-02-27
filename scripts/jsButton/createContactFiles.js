@@ -7,14 +7,12 @@ let files = Array(5)
     PathOnClient: "file.txt",
     Title: con[0].LastName + "-File-" + i
   }));
-let fileIds = await dml("insert", files, "ContentVersion");
+let fileIds = await dml.insert(files, "ContentVersion");
 let fileIdStr = fileIds.join("','");
-let docIds = await soql(
-  `select ContentDocumentId from ContentVersion where Id in ('${fileIdStr}')`
-);
+let docIds = await soql(`select ContentDocumentId from ContentVersion where Id in ('${fileIdStr}')`);
 let linkedEntities = docIds.map((e, i) => ({
   LinkedEntityId: recordId,
   ContentDocumentId: e.ContentDocumentId
 }));
-await dml("insert", linkedEntities, "ContentDocumentLink");
+await dml.insert(linkedEntities, "ContentDocumentLink");
 toast("done", "success");

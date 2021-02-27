@@ -12,23 +12,18 @@ if (!resp.done) {
   toast("Request to fetch Accounts failed", "error");
 }
 let accts = resp.records;
-resp = await callout(
-  baseurl + "Select+Id,LastName,FirstName,Email,AccountId+from+Contact",
-  "GET",
-  { Accept: "application/json" }
-);
+resp = await callout(baseurl + "Select+Id,LastName,FirstName,Email,AccountId+from+Contact", "GET", {
+  Accept: "application/json"
+});
 resp = JSON.parse(resp.body);
 if (!resp.done) {
   toast("Request to fetch Contacts failed", "error");
 }
 let contacts = resp.records;
 
-resp = await callout(
-  baseurl +
-    "Select+Id,Name,CloseDate,StageName,AccountId,ContactId+from+Opportunity",
-  "GET",
-  { Accept: "application/json" }
-);
+resp = await callout(baseurl + "Select+Id,Name,CloseDate,StageName,AccountId,ContactId+from+Opportunity", "GET", {
+  Accept: "application/json"
+});
 resp = JSON.parse(resp.body);
 if (!resp.done) {
   toast("Request to fetch Opportunities failed", "error");
@@ -44,14 +39,11 @@ let acctsToInsert = accts.map((a) => {
 
 let newAcctIds = [];
 try {
-  newAcctIds = await dml("insert", acctsToInsert, "Account");
+  newAcctIds = await dml.insert(acctsToInsert, "Account");
 } catch (err) {
   toast(JSON.stringify(err), "error");
 }
-let acctIdMap = accts.reduce(
-  (obj, a, i) => ({ ...obj, [a.Id]: newAcctIds[i] }),
-  {}
-);
+let acctIdMap = accts.reduce((obj, a, i) => ({ ...obj, [a.Id]: newAcctIds[i] }), {});
 
 let contactsToInsert = contacts
   .map((c) => {
@@ -64,14 +56,11 @@ let contactsToInsert = contacts
 
 let newCtctIds = [];
 try {
-  newCtctIds = await dml("insert", contactsToInsert, "Contact");
+  newCtctIds = await dml.insert(contactsToInsert, "Contact");
 } catch (err) {
   toast(JSON.stringify(err), "error");
 }
-let ctctIdMap = contacts.reduce(
-  (obj, c, i) => ({ ...obj, [c.Id]: newCtctIds[i] }),
-  {}
-);
+let ctctIdMap = contacts.reduce((obj, c, i) => ({ ...obj, [c.Id]: newCtctIds[i] }), {});
 
 let oppsToInsert = opps
   .map((o) => {
@@ -88,7 +77,7 @@ let oppsToInsert = opps
 
 let newOppIds = [];
 try {
-  newOppIds = dml("insert", oppsToInsert, "Opportunity");
+  newOppIds = dml.insert(oppsToInsert, "Opportunity");
 } catch (err) {
   toast(JSON.stringify(err), "error");
 }

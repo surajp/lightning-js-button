@@ -23,7 +23,7 @@ flexipage builder.
 The library supports the following apis
 
 - soql
-- dml
+- dml (dml.insert, dml.update, dml.upsert and dml.del ) // `delete` is a resrved keyword :(
 - callout
 - sfapi
 - toast
@@ -59,8 +59,7 @@ let contacts = accts
   .filter((a) => !a.Contacts || a.Contacts.length === 0)
   .slice(0, 10)
   .map((a) => ({ LastName: a.Name + "-Contact", AccountId: a.Id }));
-let contactIds = await dml(
-  "insert",
+let contactIds = await dml.insert(
   contacts,
   "Contact"
 ); /*Note how the SObjectType has been specified. This is required for insert and upsert*/
@@ -75,7 +74,7 @@ let acct = await soql(
 ); /* Note the use of template literal syntax to resolve 
 variable values in the query */
 acct[0].NumberOfEmployees = (acct[0].NumberOfEmployees || 0) + 10;
-let acctId = await dml("update", acct);
+let acctId = await dml.update(acct);
 acct = await soql(`Select NumberOfEmployees from Account where Id='${acctId}'`);
 toast(acct[0].NumberOfEmployees, "success");
 $A.get("e.force:refreshView").fire();
@@ -91,7 +90,7 @@ let cv = {
   Title: "My Awesome File",
   PathOnClient: "MyFile.txt"
 };
-let cvId = await dml("insert", cv, "ContentVersion");
+let cvId = await dml.insert(cv, "ContentVersion");
 ```
 
 ### About the Syntax
@@ -99,7 +98,7 @@ let cvId = await dml("insert", cv, "ContentVersion");
 - Note how the syntax is linear for SOQL and DML. Coupled with JavaScript's
   support for manipulating arrays, this makes it easier to manipulate data,
   even compared to Apex in several instances.
-- `Insert` and `upsert` statements must be qualified with the SObjectType thus `dml("insert",acct,"Account")`
+- `Insert` and `upsert` statements must be qualified with the SObjectType thus `dml.insert(acct,"Account")`
 - SOQL statements are parsed using template literals. Any arguments should
   follow the appropriate syntax `${argument}`
 - SOQL and DML statements may not be wrapped in a function.

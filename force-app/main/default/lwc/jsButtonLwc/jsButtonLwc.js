@@ -4,7 +4,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import callout from "c/httpRequest";
 import sfapi from "c/apiService";
 import soql from "c/soqlService";
-import dml from "c/dmlService";
+import * as dml from "c/dmlService";
 import toast from "c/toastService";
 
 export default class JsButtonLwc extends LightningElement {
@@ -27,8 +27,7 @@ export default class JsButtonLwc extends LightningElement {
   }
 
   renderedCallback() {
-    if (!this._notifiedParent)
-      this.dispatchEvent(new CustomEvent("initcomplete"));
+    if (!this._notifiedParent) this.dispatchEvent(new CustomEvent("initcomplete"));
     this._notifiedParent = true;
   }
 

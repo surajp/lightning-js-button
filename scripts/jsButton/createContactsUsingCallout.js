@@ -15,5 +15,5 @@ for (let i = 0; i < 10; i++) {
   };
   records.push(record);
 }
-await dml("insert", records, "Contact");
+await dml.insert(records, "Contact");
 $A.get("e.force:refreshView").fire();
