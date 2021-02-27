@@ -1,15 +1,11 @@
 import { LightningElement, api } from "lwc";
 import fetchJSFromCmdt from "@salesforce/apex/DynamicSOQLDMLController.getJSFromCmdt";
-import executeSoql from "@salesforce/apex/DynamicSOQLDMLController.executeSoqlQuery";
-import executeDml from "@salesforce/apex/DynamicSOQLDMLController.executeDml";
-import getSObjectType from "@salesforce/apex/DynamicSOQLDMLController.getSObjectTypeFromId";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import HttpRequest from "c/httpRequest";
-
-const REGEX_SOQL = "\\|\\|\\s+(select\\s+[^|]+)\\s+\\|\\|";
-const REGEX_UPDATE = "\\|\\|\\s+update\\s+([\\w\\d_]+).*\\|\\|";
-const REGEX_INSERT_UPSERT =
-  "\\|\\|\\s*(insert|upsert)\\s+([\\w\\d_]+)\\s*\\(\\s*(\\w+).*\\|\\|";
+import callout from "c/httpRequest";
+import sfapi from "c/apiService";
+import soql from "c/soqlService";
+import * as dml from "c/dmlService";
+import toast from "c/toastService";
 
 export default class JsButtonLwc extends LightningElement {
   @api js;
@@ -17,11 +13,22 @@ export default class JsButtonLwc extends LightningElement {
   @api recordId;
   _notifiedParent = false;
 
-  httpRequest = new HttpRequest();
+  @api
+  buttonLabel = "JS Button";
+
+  @api
+  buttonVariant = "brand";
+
+  isScriptLoaded = false;
+  _isRunning = false;
+
+  get spinnerClass() {
+    return this._isRunning ? "" : "slds-hide";
+  }
 
   renderedCallback() {
-    if (!this._notifiedParent)
-      this.dispatchEvent(new CustomEvent("initcomplete"));
+    if (!this._notifiedParent) this.dispatchEvent(new CustomEvent("initcomplete"));
+    this._notifiedParent = true;
   }
 
   @api
@@ -38,75 +45,30 @@ export default class JsButtonLwc extends LightningElement {
     this.dispatchEvent(new ShowToastEvent({ message, variant: "error" }));
   }
 
-  async executeSoql(query) {
-    try {
-      let results = await executeSoql({ query });
-      return results;
-    } catch (err) {
-      this._showError(err);
-    }
-    return null;
-  }
-
-  async executeDml(dmlType, records, sObjectType) {
-    try {
-      if (records && !Array.isArray(records)) {
-        records = [records];
-      }
-      if (!sObjectType)
-        sObjectType = await getSObjectType({ recordId: records[0].Id });
-      records = records.map((rec) => ({
-        ...rec,
-        attributes: { type: sObjectType }
-      }));
-      let results = executeDml({
-        operation: dmlType,
-        strData: sObjectType
-          ? JSON.stringify(records, (k, v) => {
-              return typeof v === "number" ? "" + v : v;
-            })
-          : null,
-        sObjectType
-      });
-      return results;
-    } catch (err) {
-      this._showError(err);
-    }
-    return null;
-  }
-
   async runJS(js) {
+    this._isRunning = true;
     //replace consecutive spaces
     //don't replace consecutive spaces
     //js = js.replace(/\s+/g, " ");
 
-    //parse soql
-    js = js.replace(
-      new RegExp(REGEX_SOQL, "gi"),
-      "await this.executeSoql(`$1`);"
-    );
-
-    //parse updates
-    js = js.replace(
-      new RegExp(REGEX_UPDATE, "gi"),
-      "await this.executeDml('update',$1);"
-    );
-
-    //parse inserts
-    js = js.replace(
-      new RegExp(REGEX_INSERT_UPSERT, "gi"),
-      "await this.executeDml('$1',$3,'$2');"
-    );
-
     try {
       //eslint-disable-next-line
-      let op = await Function("recordId", `return (async ()=>{${js}})()`).bind(
-        this
-      )(this.recordId);
+      let op = await Function(
+        "recordId",
+        "soql",
+        "dml",
+        "callout",
+        "sfapi",
+        "toast",
+        `return (async ()=>{${js}})()`
+      ).bind(this)(this.recordId, soql, dml, callout, sfapi, toast);
       return op;
     } catch (err) {
-      console.error("An error occurred " + err.message);
-      alert("Unhandled error in script " + err.message);
+      console.error("An error occurred ", err);
+      alert("Unhandled error in script " + err.message ? err.message : err);
+    } finally {
+      this._isRunning = false;
     }
+    return null;
   }
 }

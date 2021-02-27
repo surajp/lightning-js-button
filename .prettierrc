@@ -1,5 +1,6 @@
 {
   "trailingComma": "none",
+  "printWidth": 120,
   "overrides": [
     {
       "files": "**/lwc/**/*.html",
@@ -7,11 +8,11 @@
     },
     {
       "files": "*.{cmp,page,component}",
-      "options": { "parser": "html","printWidth":120 }
+      "options": { "parser": "html"}
     },
     {
       "files": "*.{cls,trigger,apex}",
-      "options": { "parser": "apex","printWidth":120 }
+      "options": { "parser": "apex"}
     }
   ]
 }

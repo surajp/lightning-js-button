@@ -1,3 +1,18 @@
 <template>
-    
+  <lightning-layout horizontal-align="space" vertical-align="center">
+    <lightning-layout-item flexibility="auto" size="6" padding="around-small">
+      <lightning-button
+        onclick={invoke}
+        label={buttonLabel}
+        variant={buttonVariant}
+      ></lightning-button>
+    </lightning-layout-item>
+  </lightning-layout>
+  <div class="spinnerholder">
+    <lightning-spinner
+      size="small"
+      variant="brand"
+      class={spinnerClass}
+    ></lightning-spinner>
+  </div>
 </template>

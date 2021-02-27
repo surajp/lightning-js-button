@@ -4,15 +4,15 @@
     <protected>false</protected>
     <values>
         <field>Script__c</field>
-        <value xsi:type="xsd:string">let acct = || Select NumberOfEmployees from Account where Id=&apos;${recordId}&apos; ||; 
+        <value xsi:type="xsd:string">let acct = await soql(`Select NumberOfEmployees from Account where Id=&apos;${recordId}&apos;`); 
 
 acct[0].NumberOfEmployees = (acct[0].NumberOfEmployees || 0) + 10;
 
-let acctId = || update acct ||; 
+let acctId = await dml.update(acct); 
 
-acct = || Select NumberOfEmployees from Account where Id=&apos;${acctId}&apos; ||;
+acct = await soql(`Select NumberOfEmployees from Account where Id=&apos;${acctId}&apos;`);
 
-alert(acct[0].NumberOfEmployees);
+toast(`Number of employees updated to ${acct[0].NumberOfEmployees}`,"success");
 
 $A.get(&apos;e.force:refreshView&apos;).fire();</value>
     </values>

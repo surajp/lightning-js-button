@@ -12,7 +12,7 @@
             .catch((err) => {
               reject(err);
             });
-        } else {
+        } else if (js) {
           helper.runJS(component, resolve, reject);
         }
       })

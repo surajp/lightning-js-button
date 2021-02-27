@@ -5,7 +5,7 @@
       .invoke()
       .then(
         $A.getCallback((resp) => {
-          console.log('>> resp '+JSON.stringify(resp));
+          console.log(">> resp " + JSON.stringify(resp));
           $A.get("e.force:closeQuickAction").fire();
         })
       )
