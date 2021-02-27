@@ -4,18 +4,18 @@
     <protected>false</protected>
     <values>
         <field>Script__c</field>
-        <value xsi:type="xsd:string">let con = || select LastName from Contact where Id=&apos;${recordId}&apos; ||;
-
-let files = Array(5).fill(0).map((e,i)=&gt;({ VersionData: btoa(con[0].LastName+&apos;-&apos;+i)), PathOnClient: &apos;file.txt&apos;, Title: con[0].LastName+&apos;-File-&apos;+i }));
-
-let fileIds = || insert ContentVersion(files) ||;
-
-let docIds = || select ContentDocumentId from ContentVersion where Id in (&apos;${fileIds.join(&quot;&apos;,&apos;&quot;)}&apos;) ||;
-
-let linkedEntities = docIds.map((e,i)=&gt;({LinkedEnityId: acct[0].Id, ContentDocumentId: e.Id});
-
-|| insert linkedEntities ||;
-
-alert(&apos;done&apos;);</value>
+        <value xsi:type="xsd:string">/* Creates 5 files related to the current Contact record */                                                                                 
+let con = await soql(`select LastName from Contact where Id=&apos;${recordId}&apos;`);                                                                
+let files = Array(5)                                                                                                                        
+  .fill(0)                                                                                                                                  
+  .map((e, i) =&gt; ({                                                                                                                         
+    VersionData: btoa(con[0].LastName + &quot;-&quot; + i),                                                                                           
+    PathOnClient: &quot;file.txt&quot;,                                                                                                               
+    Title: con[0].LastName + &quot;-File-&quot; + i,                                                                                                  
+    FirstPublishLocationId: recordId                                                                                                        
+  }));                                                                                                                                      
+let fileIds = await dml.insert(files, &quot;ContentVersion&quot;);                                                                                    
+toast(&quot;done&quot;, &quot;success&quot;);
+$A.get(&apos;e.force:refreshView&apos;).fire();</value>
     </values>
 </CustomMetadata>
