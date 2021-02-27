@@ -58,7 +58,7 @@ public with sharing class DynamicSOQLDMLController {
    * @return Id[]
    **/
   @AuraEnabled
-  public static Id[] executeDml(String operation, String strData, String sObjectType) {
+  public static List<Id> executeDml(String operation, String strData, String sObjectType) {
     List<SObject> records = null;
 
     if (sObjectType.equalsIgnoreCase('ContentVersion')) {
