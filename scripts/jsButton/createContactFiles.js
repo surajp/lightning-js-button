@@ -5,14 +5,8 @@ let files = Array(5)
   .map((e, i) => ({
     VersionData: btoa(con[0].LastName + "-" + i),
     PathOnClient: "file.txt",
-    Title: con[0].LastName + "-File-" + i
+    Title: con[0].LastName + "-File-" + i,
+    FirstPublishLocationId: recordId
   }));
 let fileIds = await dml.insert(files, "ContentVersion");
-let fileIdStr = fileIds.join("','");
-let docIds = await soql(`select ContentDocumentId from ContentVersion where Id in ('${fileIdStr}')`);
-let linkedEntities = docIds.map((e, i) => ({
-  LinkedEntityId: recordId,
-  ContentDocumentId: e.ContentDocumentId
-}));
-await dml.insert(linkedEntities, "ContentDocumentLink");
 toast("done", "success");
