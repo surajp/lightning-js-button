@@ -115,6 +115,8 @@ $A.get("e.force:refreshView").fire();
   compound fields. I will update this section as I do so.
 - To insert `ContentVersion` make sure to set `VersionData` to base64 data.
   Refer to the example [here](./scripts/jsButton/createContactFiles.js) for details.
+- The maximum size of files I was able to upload was around 2 MB.
+  Anything larger will fail silently due to heap size limits in Apex
 
 ### Using Salesforce (and other) APIs in your script
 
