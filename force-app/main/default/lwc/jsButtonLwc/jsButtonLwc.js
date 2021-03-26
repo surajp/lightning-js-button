@@ -35,6 +35,7 @@ export default class JsButtonLwc extends LightningElement {
   @api
   async invoke() {
     if (!this.js && this.cmdtName) {
+      this.cmdtName = this.cmdtName.replace(/\./g, "_"); //quickAction API returns action name as SObject.Action_API_Name. Replace '.' with '_' and use that as the api name to fetch the corresponding custom metadata record.
       let js = await fetchJSFromCmdt({ cmdtName: this.cmdtName });
       return this.runJS(js);
     } else if (this.js) {

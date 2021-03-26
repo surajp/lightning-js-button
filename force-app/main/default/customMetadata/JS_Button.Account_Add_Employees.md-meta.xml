@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>Account</label>
+    <label>Account - Add_Employees</label>
     <protected>false</protected>
     <values>
         <field>Script__c</field>
@@ -12,7 +12,7 @@ let acctId = await dml.update(acct);
 
 acct = await soql(`Select NumberOfEmployees from Account where Id=&apos;${acctId}&apos;`);
 
-toast(`Number of employees updated to ${acct[0].NumberOfEmployees}`,"success");
+toast(`Number of employees updated to ${acct[0].NumberOfEmployees}`,&quot;success&quot;);
 
 $A.get(&apos;e.force:refreshView&apos;).fire();</value>
     </values>

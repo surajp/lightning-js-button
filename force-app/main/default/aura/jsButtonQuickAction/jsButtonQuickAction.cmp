@@ -1,8 +1,10 @@
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:hasSObjectName">
+  <lightning:quickActionAPI aura:id="quickActionAPI" />
+  <aura:attribute name="cmdtName" type="string" />
   <c:jsButtonLwc
     aura:id="jsbutton"
     recordId="{!v.recordId}"
-    cmdtName="{!v.sObjectName}"
+    cmdtName="{!v.cmdtName}"
     oninitcomplete="{!c.doInit}"
   ></c:jsButtonLwc>
 </aura:component>
