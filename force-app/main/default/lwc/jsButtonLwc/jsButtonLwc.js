@@ -11,6 +11,7 @@ export default class JsButtonLwc extends LightningElement {
   @api js;
   @api cmdtName;
   @api recordId;
+  @api recordIds;
   _notifiedParent = false;
 
   @api
@@ -35,9 +36,9 @@ export default class JsButtonLwc extends LightningElement {
   async invoke() {
     if (!this.js && this.cmdtName) {
       let js = await fetchJSFromCmdt({ cmdtName: this.cmdtName });
-      await this.runJS(js);
+      return this.runJS(js);
     } else if (this.js) {
-      await this.runJS(this.js);
+      return this.runJS(this.js);
     }
   }
 
@@ -60,15 +61,16 @@ export default class JsButtonLwc extends LightningElement {
         "callout",
         "sfapi",
         "toast",
+        "recordIds",
         `return (async ()=>{${js}})()`
-      ).bind(this)(this.recordId, soql, dml, callout, sfapi, toast);
-      return op;
+      ).bind(this)(this.recordId, soql, dml, callout, sfapi, toast, this.recordIds);
+      return op || true;
     } catch (err) {
       console.error("An error occurred ", err);
       alert("Unhandled error in script " + err.message ? err.message : err);
     } finally {
       this._isRunning = false;
     }
-    return null;
+    return false;
   }
 }

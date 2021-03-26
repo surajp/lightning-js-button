@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Contact - List</label>
+    <protected>false</protected>
+    <values>
+        <field>Script__c</field>
+        <value xsi:type="xsd:string">/* Creates 5 files related to the current Contact record */
+
+recordId = recordId.replace(/,/g,&quot;&apos;,&apos;&quot;);
+let con = await soql(`select LastName from Contact where Id in (&apos;${recordId}&apos;)`);
+let files = con.map(c=&gt;{
+return  Array(5).fill(0).map((e,i)=&gt;({
+          VersionData: btoa(c.LastName + &quot;-&quot; + i),
+          PathOnClient: &quot;file.txt&quot;,
+          Title: c.LastName + &quot;-File-&quot; + i,
+          FirstPublishLocationId: c.Id
+        }));
+}).flat();
+
+let fileIds = await dml.insert(files, &quot;ContentVersion&quot;);
+return fileIds ;</value>
+    </values>
+</CustomMetadata>

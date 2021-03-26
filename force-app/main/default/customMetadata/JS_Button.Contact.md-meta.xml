@@ -4,7 +4,9 @@
     <protected>false</protected>
     <values>
         <field>Script__c</field>
-        <value xsi:type="xsd:string">/* Creates 5 files related to the current Contact record */                                                                                 
+        <value xsi:type="xsd:string">/* Creates 5 files related to the current Contact record */
+
+alert(recordId);                                                                     
 let con = await soql(`select LastName from Contact where Id=&apos;${recordId}&apos;`);                                                                
 let files = Array(5)                                                                                                                        
   .fill(0)                                                                                                                                  
