@@ -65,7 +65,7 @@ export default class JsButtonLwc extends LightningElement {
         "recordIds",
         `return (async ()=>{${js}})()`
       ).bind(this)(this.recordId, soql, dml, callout, sfapi, toast, this.recordIds);
-      return op || true;
+      return op;
     } catch (err) {
       console.error("An error occurred ", err);
       alert("Unhandled error in script " + err.message ? err.message : err);

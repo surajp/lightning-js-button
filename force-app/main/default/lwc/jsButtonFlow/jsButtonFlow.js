@@ -19,8 +19,10 @@ export default class JsButtonFlow extends LightningElement {
 
   async renderedCallback() {
     this.response = await this.template.querySelector("c-js-button-lwc").invoke();
-    if (typeof this.response === "object") this.response = JSON.stringify(this.response);
-    else if (typeof this.response !== "string") this.response = "" + this.response;
+    if (this.response !== null && this.response !== undefined) {
+      if (typeof this.response === "object") this.response = JSON.stringify(this.response);
+      else if (typeof this.response !== "string") this.response = "" + this.response;
+    }
     this.navigate();
   }
 
