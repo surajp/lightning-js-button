@@ -1,0 +1,8 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:hasSObjectName">
+  <c:jsButtonLwc
+    aura:id="jsbutton"
+    recordId="{!v.recordId}"
+    cmdtName="Global_JS_Button"
+    oninitcomplete="{!c.doInit}"
+  ></c:jsButtonLwc>
+</aura:component>
