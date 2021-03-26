@@ -4,8 +4,11 @@
     <protected>false</protected>
     <values>
         <field>Script__c</field>
-        <value xsi:type="xsd:string">let acct = {&quot;Name&quot;:&quot;Global Health&quot;,&quot;Industry&quot;:&quot;Healthcare&quot;};
-dml.insert(acct,&quot;Account&quot;);
-toast(&quot;Account created&quot;,&quot;success&quot;);</value>
+        <value xsi:type="xsd:string">let name = prompt(&apos;Enter name of the Account&apos;);
+if(name){
+ let acct = {&quot;Name&quot;: name,&quot;Industry&quot;:&quot;Healthcare&quot;};
+ dml.insert(acct,&quot;Account&quot;);
+ toast(&quot;Account created&quot;,&quot;success&quot;);
+}</value>
     </values>
 </CustomMetadata>

@@ -18,6 +18,6 @@ return  Array(5).fill(0).map((e,i)=&gt;({
 }).flat();
 
 let fileIds = await dml.insert(files, &quot;ContentVersion&quot;);
-return fileIds ;</value>
+return fileIds;</value>
     </values>
 </CustomMetadata>
