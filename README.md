@@ -9,14 +9,45 @@ Feel free to raise a PR to contribute your own scripts.
 
 ### The Setup
 
+#### Object-specific Actions
+
 The button can be made available to users via a quick action powered by the
 `jsButtonQuickAction` component. The actual JavaScript should be entered into a
 `JS_Button__mdt` custom metadata record, into the `Script__c` field with the
-same name as the name of the SObject. The repo contains a couple of samples
-for `Account` and `Contact`. The corollary is that, out of the box, only one
-button per SObjectType may be supported, for quick actions. You can add any
-number of buttons on the flexipage, with the underlying JS added using the
-flexipage builder.
+same name as the name of the custom action prefixed with the sobjectname and underscore.
+The repo contains a couple of samples for `Account` and `Contact`. For eg: if you
+add a quick action to Account with the name `Add_Employees`, the name of the corresponding
+custom metadata record should be `Account_Add_Employees`. You can also add
+buttons on the flexipage using `jsButtonLwc` component, with the supporting JS
+added using the flexipage builder.
+
+#### Global Actions
+
+For global actions, the name of the supporting cmdt record containg the script needs to
+be hardcoded into the aura quick action component itself. Check out
+[jsQuickActionButtonGlobal](force-app/main/default/aura/jsButtonQuickActionGlobal/) for an
+example. To create a new Global Action, you would need to create another similar aura wrapper
+with a different cmdt name hardcoded in it.
+
+#### List View Mass Actions
+
+You can now create list view actions that can act on multiple selected records. The steps for doing
+so are as follows:
+
+- Create a screen flow and add a screen with `jsButtonFlow` as the only component on the screen.
+- Create a text collection variable named `ids` and pass it as an input param to the `Record Ids`
+  parameter of the `jsButtonFlow` component
+- Pass in a script to the component either directly through the `js` parameter of the LWC component
+  or by passing in a `cmdtName` parameter and adding a `JS_Button__mdt` record with the same name.
+  See [example](force-app/main/default/flows/Js_Button_Contact.flow-meta.xml)
+- In the script, the selected record ids are available as a comma-separated string through the `recordId`
+  property. See [example](force-app/main/default/customMetadata/JS_Button.Contact_List.md-meta.xml)
+- Create a url button on the SObject of interest with the flow url
+- Add the URL button to the SObject's list view in Search Layouts.
+
+For flow buttons, your script can return a value that can be used in the rest of the Flow. Make sure to add
+a `retURL` param to your URL button to make sure the flow doesn't loop back after finishing.
+See [example](force-app/main/default/objects/Contact/webLinks/JS_Button.webLink-meta.xml)
 
 ### APIs
 

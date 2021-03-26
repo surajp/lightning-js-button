@@ -11,7 +11,6 @@ export default class JsButtonLwc extends LightningElement {
   @api js;
   @api cmdtName;
   @api recordId;
-  @api recordIds;
   _notifiedParent = false;
 
   @api
@@ -62,9 +61,8 @@ export default class JsButtonLwc extends LightningElement {
         "callout",
         "sfapi",
         "toast",
-        "recordIds",
         `return (async ()=>{${js}})()`
-      ).bind(this)(this.recordId, soql, dml, callout, sfapi, toast, this.recordIds);
+      ).bind(this)(this.recordId, soql, dml, callout, sfapi, toast);
       return op;
     } catch (err) {
       console.error("An error occurred ", err);
